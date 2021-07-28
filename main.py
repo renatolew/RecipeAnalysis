@@ -1,5 +1,9 @@
-import json, csv
+import csv
+import json
+import re
+
 from collections import Counter
+from nltk.corpus import stopwords
 
 #opening the json file in python
 f = open("recipes_raw_nosource_combined.json",)
@@ -25,17 +29,18 @@ for i in data:
         if key == "instructions":
             data_skills.append(value)
 
+
 #converting the ingredients list to a string to split it into separate words and count them.
 ingredients_list = str(data_ingredients)
 split_it_ingredients = ingredients_list.split()
 words_counter_ingredients = Counter(split_it_ingredients)
-most_occurred_ingredients = dict(words_counter_ingredients.most_common(100))
+most_occurred_ingredients = dict(words_counter_ingredients.most_common(300))
 
 #converting the instructions list to a string to split it into separate words and count them.
 skills_list = str(data_skills)
 split_it_skills = skills_list.split()
 words_counter_skills = Counter(split_it_skills)
-most_occurred_skills = dict(words_counter_skills.most_common(100))
+most_occurred_skills = dict(words_counter_skills.most_common(300))
 
 #printing a list with each word and its occurrence.
 print(most_occurred_ingredients)
@@ -45,6 +50,35 @@ print(most_occurred_skills)
 #closing the json file to prevent disasters.
 f.close
 
+#defining all stopwords in a variable to be filtered.
+stop_words = stopwords.words("english")
+
+#defining a function to check if a string had numbers in order to filter out the dictionary keys that are only a number.
+def hasNumbers(inputString):
+     return bool(re.search(r'\d', inputString))
+
+
+#deleting all dictionary items that have a stopword as key for the ingredients dict.
+delete_ingredients = [key for key in most_occurred_ingredients if key in stop_words]
+for key in delete_ingredients: del most_occurred_ingredients[key]
+#deleting all dictionary items that have a number as key for the ingredients dict.
+delete_numerical_ingredients = [key for key in most_occurred_ingredients if hasNumbers(key) == True]
+for key in delete_numerical_ingredients: del most_occurred_ingredients[key]
+
+#deleting all dictionary items that have a stopword as key for the skills dict.
+delete_skills = [key for key in most_occurred_skills if key in stop_words]
+for key in delete_skills: del most_occurred_skills[key]
+#deleting all dictionary items that have a number as key for the skills dict.
+delete_numerical_skills = [key for key in most_occurred_skills if hasNumbers(key) == True]
+for key in delete_numerical_skills: del most_occurred_skills[key]
+
+
+print(most_occurred_ingredients)
+print(len(most_occurred_ingredients))
+
+#printing the lenght of each new dictionary in order to check how many keys have been removed form the original 300.
+print(most_occurred_skills)
+print(len(most_occurred_skills))
 
 
 #creating lists to serve as input when exporting the data to a .csv file for ingredients.
@@ -56,10 +90,10 @@ data_csv_ingredients = list(most_occurred_ingredients.values())
 with open('ingredients.csv', 'w+', encoding='UTF8', newline='') as f_i:
     writer = csv.writer(f_i)
 
-    # write the header
+    #writing the header with each key
     writer.writerow(header_csv_ingredients)
 
-    # write the data
+    #writing the data with each value
     writer.writerow(data_csv_ingredients)
 
 
@@ -73,8 +107,8 @@ data_csv_skills = list(most_occurred_skills.values())
 with open('skills.csv', 'w+', encoding='UTF8', newline='') as f_s:
     writer = csv.writer(f_s)
 
-    # write the header
+    #writing the header with each key
     writer.writerow(header_csv_skills)
 
-    # write the data
+    #writing the data with each value
     writer.writerow(data_csv_skills)
