@@ -1,0 +1,3 @@
+[console_scripts]
+imports = imports.cli:main
+
