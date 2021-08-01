@@ -34,13 +34,13 @@ for i in data:
 ingredients_list = str(data_ingredients)
 split_it_ingredients = ingredients_list.split()
 words_counter_ingredients = Counter(split_it_ingredients)
-most_occurred_ingredients = dict(words_counter_ingredients.most_common(300))
+most_occurred_ingredients = dict(words_counter_ingredients.most_common(100))
 
 #converting the instructions list to a string to split it into separate words and count them.
 skills_list = str(data_skills)
 split_it_skills = skills_list.split()
 words_counter_skills = Counter(split_it_skills)
-most_occurred_skills = dict(words_counter_skills.most_common(300))
+most_occurred_skills = dict(words_counter_skills.most_common(100))
 
 #printing a list with each word and its occurrence.
 print(most_occurred_ingredients)
