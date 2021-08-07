@@ -1,4 +1,4 @@
-#RecipeAnalysis
+# RecipeAnalysis
 
 This project aims to analyse the data of over 125.000 recipes to obtain the most common ingredients and cooking skills used. This data is to be further presented in a visualization model using Power BI, you can find a PNG file with the final report here.
 
